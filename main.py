@@ -15,8 +15,8 @@ def main(clf):
     dataloader = instantiate(clf['DataLoader'], dataset)
     optim = instantiate(clf['optimizer'], ddpm.parameters())
     
-    wandb.login()
-    wandb.init(project='hw_1', name=clf.name, config=clf)
+    # wandb.login()
+    # wandb.init(project='hw_1', name=clf.name, config=clf)
 
     
     for i in range(clf['num_epochs']):
