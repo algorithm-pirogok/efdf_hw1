@@ -8,8 +8,9 @@ from modeling.training import generate_samples, train_epoch
 @hydra.main(config_path=".", config_name="main_config")
 def main(clf):
     
-    if not os.path.exists('samples'):
-        os.mkdir('samples')
+    if not os.path.exists("samples"):
+        os.mkdir("samples")
+        print("Create dir")
 
     
     clf['device'] = "cuda" if torch.cuda.is_available() else "cpu"
