@@ -30,7 +30,7 @@ def main(clf):
     ))
 
     generate_samples(ddpm, clf['device'], f"{path}/0.png")
-    noise = torch.randn((8, 3, 32, 32), clf['device'])
+    noise = torch.randn((8, 3, 32, 32), device=clf['device'])
     wandb.log({"Generate Images": wandb.Image(result)}, step=0)
     for i in range(clf['num_epochs']):
         train_epoch(ddpm, dataloader, optim, clf['device'], i, clf['logging_policy'])
