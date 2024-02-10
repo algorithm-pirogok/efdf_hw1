@@ -54,15 +54,14 @@ def test_training(device, train_dataset):
     ddpm = DiffusionModel(
         eps_model=UnetModel(3, 3, hidden_size=32),
         betas=(1e-4, 0.02),
-        num_timesteps=10,
+        num_timesteps=5,
     )
     ddpm = ddpm.to(device)
 
     optim = torch.optim.Adam(ddpm.parameters(), lr=5e-4)
-    dataloader = DataLoader(torch.utils.data.Subset(train_dataset, list(range(10))), batch_size=4, shuffle=True)
+    dataloader = DataLoader(torch.utils.data.Subset(train_dataset, list(range(3))), batch_size=4, shuffle=True)
 
     
-    for i in range(251): # Смотрим на последние картинки
+    for i in range(25000): # Смотрим на последние картинки
         train_epoch(ddpm, dataloader, optim, device)
-        if i % 50 & i > 100:
-            generate_samples(ddpm, device, f"{path}/{i}.png")
+    # generate_samples(ddpm, device, f"{path}/{i}.png")
