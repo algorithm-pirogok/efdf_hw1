@@ -22,11 +22,11 @@ class DiffusionModel(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         timestep = torch.randint(1, self.num_timesteps + 1, (x.shape[0],)).to(x.device) # переносим все созданные устройсва на девайс
-        eps = torch.randn_like(x).to(x.device) # fix 4 какая-то проверка на внимательность, заменил rand на randn
+        eps = torch.randn_like(x).to(x.device) # fix какая-то проверка на внимательность, заменил rand на randn
 
         x_t = (
             self.sqrt_alphas_cumprod[timestep, None, None, None] * x
-            + self.one_minus_alpha_over_prod[timestep, None, None, None] * eps
+            + self.sqrt_one_minus_alpha_prod[timestep, None, None, None] * eps # fix не тот коэффициент
         )
 
         return self.criterion(eps, self.eps_model(x_t, timestep / self.num_timesteps))
@@ -45,7 +45,7 @@ class DiffusionModel(nn.Module):
 
 def get_schedules(beta1: float, beta2: float, num_timesteps: int) -> Dict[str, torch.Tensor]:
     assert 0 < beta1 < beta2 < 1.0, "beta1 and beta2 must be in (0, 1)"
-    # fix 2 заметил, что нет оценки снизу и добавил < 0
+    # fix заметил, что нет оценки снизу и добавил < 0
 
     betas = (beta2 - beta1) * torch.arange(0, num_timesteps + 1, dtype=torch.float32) / num_timesteps + beta1
     sqrt_betas = torch.sqrt(betas)
