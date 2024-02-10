@@ -27,6 +27,7 @@ def train_epoch(model: DiffusionModel, dataloader: DataLoader, optimizer: Optimi
         pbar.set_description(f"loss: {loss_ema:.4f}")
         if logging_policy is not None and step % logging_policy == 0: # fix Добавили wandb
             wandb.log({"epoch": epoch, "loss": train_loss, "learning_rate": optimizer.param_groups[0]['lr']}, step=step + epoch * len(dataloader))
+    return x
 
 
 def generate_samples(model: DiffusionModel, device: str, path: str, noise: torch.Tensor = None):
