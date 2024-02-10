@@ -36,7 +36,7 @@ class DiffusionModel(nn.Module):
         x_i = torch.randn(num_samples, *size).to(device) # fix не было привязки к девайсу
 
         # fix 3 так-то невключительно до 0 идет, поэтому нужно брать -1
-        for i in range(self.num_timesteps, -1, -1):
+        for i in range(self.num_timesteps, -1, -1): 
             z = torch.randn(num_samples, *size).to(device) if i > 1 else 0 # fix не было привязки к девайсу
             eps = self.eps_model(x_i, torch.tensor(i / self.num_timesteps).repeat(num_samples, 1).to(device))
             x_i = self.inv_sqrt_alphas[i].to(device) * (x_i - eps * self.one_minus_alpha_over_prod[i]) + self.sqrt_betas[i].to(device) * z
