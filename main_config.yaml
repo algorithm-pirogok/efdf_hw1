@@ -10,7 +10,7 @@ CIFAR10:
 DataLoader:
   _target_: torch.utils.data.DataLoader
   batch_size: 128
-  num_workers: 4
+  num_workers: 2
   shuffle: True
 
 Augmentations:
@@ -27,7 +27,7 @@ DiffusionModel:
     _target_: modeling.unet.UnetModel
     in_channels: 3
     out_channels: 3
-    hidden_size: 256
+    hidden_size: 128 # с 256 слишком долго выходило
   betas:
     [0.0001, 0.02]
   num_timesteps: 1000

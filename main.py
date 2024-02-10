@@ -1,11 +1,17 @@
 import hydra
 from hydra.utils import instantiate
 import torch
+import os
 import wandb
 from modeling.training import generate_samples, train_epoch
 
 @hydra.main(config_path=".", config_name="main_config")
 def main(clf):
+    
+    if not os.path.exists('samples'):
+        os.mkdir('samples')
+
+    
     clf['device'] = "cuda" if torch.cuda.is_available() else "cpu"
     ddpm = instantiate(clf['DiffusionModel']).to(clf['device'])
 
