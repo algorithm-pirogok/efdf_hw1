@@ -24,16 +24,16 @@ def main(clf):
     dataloader = instantiate(clf['DataLoader'], dataset)
     optim = instantiate(clf['optimizer'], ddpm.parameters())
     
-    #hydra.initialize(config_path=".", strict=True) # Добавляем конфиг для логгирования
-    #with hydra.initialize(config_path=".", job_name="train"):
-    #    cfg = hydra.compose(config_name="main_config")    
+    hydra.initialize(config_path=".", job_name="train") # Добавляем конфиг для логгирования
+    with hydra.initialize(config_path=".", job_name="train"):
+        cfg = hydra.compose(config_name="main_config")    
     
     wandb.login() # Добавили wandb
-    wandb.init(project='hw_1', name=clf.name)# , config=OmegaConf.to_container(cfg))
+    wandb.init(project='hw_1', name=clf.name, config=OmegaConf.to_container(cfg))
 
     generate_samples(ddpm, clf['device'], f"{path}/0.png")
     for i in range(clf['num_epochs']):
-        train_epoch(ddpm, dataloader, optim, clf['device'])
+        train_epoch(ddpm, dataloader, optim, clf['device'], i, clf['logging_policy'])
         generate_samples(ddpm, clf['device'], f"{path}/{i+1:02d}.png")
 
 

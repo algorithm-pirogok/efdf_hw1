@@ -36,4 +36,5 @@ DiffusionModel:
 name: main_config
 n_gpu: 1
 num_epochs: 100
+logging_policy: 25
 device: 'cpu'
