@@ -24,10 +24,10 @@ def main(clf):
     # wandb.login()
     # wandb.init(project='hw_1', name=clf.name, config=clf)
 
-    
+    generate_samples(ddpm, clf['device'], f"samples/0.png")
     for i in range(clf['num_epochs']):
         train_epoch(ddpm, dataloader, optim, clf['device'])
-        generate_samples(ddpm, clf['device'], f"samples/{i:02d}.png")
+        generate_samples(ddpm, clf['device'], f"samples/{i+1:02d}.png")
 
 
 if __name__ == "__main__":
