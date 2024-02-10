@@ -54,7 +54,7 @@ def test_training(device, train_dataset):
     ddpm = DiffusionModel(
         eps_model=UnetModel(3, 3, hidden_size=32),
         betas=(1e-4, 0.02),
-        num_timesteps=5,
+        num_timesteps=2,
     )
     ddpm = ddpm.to(device)
 
@@ -62,6 +62,6 @@ def test_training(device, train_dataset):
     dataloader = DataLoader(torch.utils.data.Subset(train_dataset, list(range(3))), batch_size=4, shuffle=True)
 
     
-    for i in range(25000): # Смотрим на последние картинки
+    for i in range(5000): # Смотрим на последние картинки
         train_epoch(ddpm, dataloader, optim, device)
-    # generate_samples(ddpm, device, f"{path}/{i}.png")
+    generate_samples(ddpm, device, f"{path}/{device}_{i}.png")

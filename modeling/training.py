@@ -37,4 +37,4 @@ def generate_samples(model: DiffusionModel, device: str, path: str, noise: torch
         grid = make_grid(samples, nrow=4)
         if noise is None:
             save_image(grid, path)
-    return grid
+    return samples
