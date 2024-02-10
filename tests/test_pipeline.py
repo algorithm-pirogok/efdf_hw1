@@ -31,7 +31,7 @@ def test_train_on_one_batch(device, train_dataset):
         betas=(1e-4, 0.02),
         num_timesteps=1000,
     )
-    ddpm = ddpm.to(device) # fix 5, кажется, что так не работает
+    ddpm = ddpm.to(device) # fix
 
     optim = torch.optim.Adam(ddpm.parameters(), lr=5e-4)
     dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True)
@@ -57,17 +57,17 @@ def test_training(device):
         train=True,
         download=True,
         transform=transforms,
-    )[:10]
+    )
     
     ddpm = DiffusionModel(
-        eps_model=UnetModel(3, 3, hidden_size=16),
+        eps_model=UnetModel(3, 3, hidden_size=32),
         betas=(1e-4, 0.02),
         num_timesteps=10,
     )
     ddpm = ddpm.to(device)
 
     optim = torch.optim.Adam(ddpm.parameters(), lr=5e-4)
-    dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True)
+    dataloader = DataLoader(torch.utils.data.Subset(train_dataset, list(range(10))), batch_size=4, shuffle=True)
 
     
     for i in range(100):
