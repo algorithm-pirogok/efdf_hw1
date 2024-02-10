@@ -29,9 +29,11 @@ def train_epoch(model: DiffusionModel, dataloader: DataLoader, optimizer: Optimi
             wandb.log({"epoch": epoch, "loss": train_loss, "learning_rate": optimizer.param_groups[0]['lr']}, step=step + epoch * len(dataloader))
 
 
-def generate_samples(model: DiffusionModel, device: str, path: str):
+def generate_samples(model: DiffusionModel, device: str, path: str, noise: torch.Tensor = None):
     model.eval()
     with torch.no_grad():
-        samples = model.sample(8, (3, 32, 32), device=device,)
+        samples = model.sample(8, (3, 32, 32), device=device, noise=noise)
         grid = make_grid(samples, nrow=4, normalize=True) # fix Картинки менее шакальные
-        save_image(grid, path)
+        if noise is None:
+            save_image(grid, path)
+    return grid
