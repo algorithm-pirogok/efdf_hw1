@@ -35,7 +35,7 @@ def main(clf):
         train_epoch(ddpm, dataloader, optim, clf['device'], i, clf['logging_policy'])
         generate_samples(ddpm, clf['device'], f"{path}/{i+1:02d}.png")
         result = generate_samples(ddpm, clf['device'], f"{path}/{i+1:02d}.png", noise)
-        wandb.log({"Generate Images": wandb.Image(result)})
+        wandb.log({"Generate Images": wandb.Image(result)}, step=i)
 
 
 if __name__ == "__main__":
