@@ -70,6 +70,7 @@ def test_training(device):
     dataloader = DataLoader(torch.utils.data.Subset(train_dataset, list(range(10))), batch_size=4, shuffle=True)
 
     
-    for i in range(100):
+    for i in range(251):
         train_epoch(ddpm, dataloader, optim, device)
-        generate_samples(ddpm, device, f"{path}/{i}.png")
+        if i % 50:
+            generate_samples(ddpm, device, f"{path}/{i}.png")

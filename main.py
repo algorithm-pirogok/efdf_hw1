@@ -2,19 +2,21 @@ import hydra
 from hydra.utils import instantiate
 import torch
 import os
+from omegaconf import OmegaConf
 import wandb
+
 from modeling.training import generate_samples, train_epoch
 
-@hydra.main(config_path=".", config_name="main_config")
+@hydra.main(config_path=".", config_name="main_config") # Добавили гидру
 def main(clf):
-    path = "samples"
+    path = "samples" # Добавили папку для вывода
     if not os.path.exists(path):
         os.mkdir(path)
         print("Create dir")
 
     
     clf['device'] = "cuda" if torch.cuda.is_available() else "cpu"
-    ddpm = instantiate(clf['DiffusionModel']).to(clf['device'])
+    ddpm = instantiate(clf['DiffusionModel']).to(clf['device']) # Переписали под гидру
 
     train_transforms = instantiate(clf['Augmentations'])
     dataset = instantiate(clf['CIFAR10'], transform=train_transforms)
@@ -22,8 +24,12 @@ def main(clf):
     dataloader = instantiate(clf['DataLoader'], dataset)
     optim = instantiate(clf['optimizer'], ddpm.parameters())
     
-    # wandb.login()
-    # wandb.init(project='hw_1', name=clf.name, config=clf)
+    hydra.initialize(config_path=".", strict=True) # Добавляем конфиг для логгирования
+    with hydra.initialize(config_path=".", job_name="train"):
+        cfg = hydra.compose(config_name="main_config")    
+    
+    wandb.login() # Добавили wandb
+    wandb.init(project='hw_1', name=clf.name, config=OmegaConf.to_container(cfg))
 
     generate_samples(ddpm, clf['device'], f"{path}/0.png")
     for i in range(clf['num_epochs']):
