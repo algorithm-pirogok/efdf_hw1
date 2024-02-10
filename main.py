@@ -31,13 +31,13 @@ def main(clf):
 
     generate_samples(ddpm, clf['device'], f"{path}/0.png")
     noise = torch.randn((8, 3, 32, 32), device=clf['device'])
-    wandb.log({"Generate Images": wandb.Image(noise)})
+    wandb.log({"Generate Images": wandb.Image(noise)}, step=0)
     for i in range(clf['num_epochs']):
         images = train_epoch(ddpm, dataloader, optim, clf['device'], i, clf['logging_policy'])
         generate_samples(ddpm, clf['device'], f"{path}/{i+1:02d}.png")
         result = generate_samples(ddpm, clf['device'], f"{path}/{i+1:02d}.png", noise)
-        wandb.log({"Inputs": wandb.Image(images)})
-        wandb.log({"Generate Images": wandb.Image(result)})
+        wandb.log({"Inputs": wandb.Image(images)}, step=(i+1)*len(dataloader))
+        wandb.log({"Generate Images": wandb.Image(result)}, step=(i+1)*len(dataloader))
 
 
 if __name__ == "__main__":
