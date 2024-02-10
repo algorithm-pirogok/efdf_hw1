@@ -43,7 +43,7 @@ def test_train_on_one_batch(device, train_dataset):
     assert loss < 0.5
 
 @pytest.mark.parametrize(["device"], [["cpu"], ["cuda"]])
-def test_training(device, train_dataset):
+def test_training(device):
     # fix 6 нагло копируем с test_train_on_one_batch
     # note: implement and test a complete training procedure (including sampling)
     
@@ -51,10 +51,18 @@ def test_training(device, train_dataset):
     if not os.path.exists(path):
         os.mkdir(path)
     
+    transforms = Compose([ToTensor(), Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+    train_dataset = CIFAR10(
+        "./data",
+        train=True,
+        download=True,
+        transform=transforms,
+    )[:10]
+    
     ddpm = DiffusionModel(
-        eps_model=UnetModel(3, 3, hidden_size=32),
+        eps_model=UnetModel(3, 3, hidden_size=16),
         betas=(1e-4, 0.02),
-        num_timesteps=1000,
+        num_timesteps=10,
     )
     ddpm = ddpm.to(device)
 
@@ -62,6 +70,6 @@ def test_training(device, train_dataset):
     dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True)
 
     
-    #for i in range(2):
-        #train_epoch(ddpm, dataloader, optim, device)
-        #generate_samples(ddpm, device, f"{path}/i.png")
+    for i in range(100):
+        train_epoch(ddpm, dataloader, optim, device)
+        generate_samples(ddpm, device, f"{path}/{i}.png")

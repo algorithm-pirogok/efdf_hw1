@@ -7,9 +7,9 @@ from modeling.training import generate_samples, train_epoch
 
 @hydra.main(config_path=".", config_name="main_config")
 def main(clf):
-    
-    if not os.path.exists("samples"):
-        os.mkdir("samples")
+    path = "samples"
+    if not os.path.exists(path):
+        os.mkdir(path)
         print("Create dir")
 
     
@@ -25,10 +25,10 @@ def main(clf):
     # wandb.login()
     # wandb.init(project='hw_1', name=clf.name, config=clf)
 
-    generate_samples(ddpm, clf['device'], f"samples/0.png")
+    generate_samples(ddpm, clf['device'], f"{path}/0.png")
     for i in range(clf['num_epochs']):
         train_epoch(ddpm, dataloader, optim, clf['device'])
-        generate_samples(ddpm, clf['device'], f"samples/{i+1:02d}.png")
+        generate_samples(ddpm, clf['device'], f"{path}/{i+1:02d}.png")
 
 
 if __name__ == "__main__":
