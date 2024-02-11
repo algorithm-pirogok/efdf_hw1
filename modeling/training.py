@@ -29,11 +29,11 @@ def train_epoch(model: DiffusionModel, dataloader: DataLoader, optimizer: Optimi
             wandb.log({"loss": loss_ema, "learning_rate": optimizer.param_groups[0]['lr']}, step=step + epoch * len(dataloader))
     return x
 
-def generate_samples(model: DiffusionModel, device: str, path: str, noise: torch.Tensor = None):
+def generate_samples(model: DiffusionModel, device: str, path: str, noise: torch.Tensor = None, is_save: bool = True):
     model.eval()
     with torch.no_grad():
         samples = model.sample(8, (3, 32, 32), device=device, noise=noise)
         grid = make_grid(samples, nrow=4)
-        if noise is None:
+        if is_save:
             save_image(grid, path)
     return samples

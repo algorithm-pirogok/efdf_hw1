@@ -63,11 +63,11 @@ def test_training(device, train_dataset):
     dataloader = DataLoader(torch.utils.data.Subset(train_dataset, list(range(1))), batch_size=4, shuffle=True)
 
     
-    generate_samples(ddpm, device, f"{path}/{device}_{0}.png")
-    step = 150 if device == "cpu" else 1500
-    for i in range(151 if device == "cpu" else 15001): # Смотрим на последние картинки
+    noise = generate_samples(ddpm, device, f"{path}/{device}_{0}.png")
+    step = 500 if device == "cpu" else 1500
+    for i in range(7500 if device == "cpu" else 15001): # Смотрим на последние картинки
         orig = train_epoch(ddpm, dataloader, optim, device)
         if i == 0:
             save_image(orig, f"{path}/{device}_orig.png")
         if not i % step:
-            generate_samples(ddpm, device, f"{path}/{device}_{i}.png")
+            generate_samples(ddpm, device, f"{path}/{device}_{i}.png", noise)
