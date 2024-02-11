@@ -9,11 +9,10 @@ from modeling.training import generate_samples, train_epoch
 
 @hydra.main(config_path=".", config_name="main_config") # Добавили гидру
 def main(clf):
-    path = "samples" # Добавили папку для вывода
+    
+    path = os.path.join(os.getcwd(), 'samples')
     if not os.path.exists(path):
-        os.mkdir(path)
-        print("Create dir")
-
+        os.makedirs(path)
     
     clf['device'] = "cuda" if torch.cuda.is_available() else "cpu"
     ddpm = instantiate(clf['DiffusionModel']).to(clf['device']) # Переписали под гидру
