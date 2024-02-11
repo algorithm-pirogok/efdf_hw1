@@ -65,8 +65,8 @@ def test_training(device, train_dataset):
 
     
     noise = generate_samples(ddpm, device, f"{path}/{device}_{0}.png")
-    step = 500 if device == "cpu" else 1500
-    for i in range(7500 if device == "cpu" else 15001): # Смотрим на последние картинки
+    step = 250 if device == "cpu" else 500
+    for i in range(751 if device == "cpu" else 1501): # Смотрим на последние картинки
         orig = train_epoch(ddpm, dataloader, optim, device)
         if i == 0:
             save_image(orig, f"{path}/{device}_orig.png")
