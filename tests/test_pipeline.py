@@ -49,7 +49,8 @@ def test_training(device, train_dataset):
     # note: implement and test a complete training procedure (including sampling)
     
     path = os.path.join(os.getcwd(), 'test_dir')
-    os.makedirs(path)
+    if not os.path.exists(path):
+        os.makedirs(path)
     
     ddpm = DiffusionModel(
         eps_model=UnetModel(3, 3, hidden_size=32),
