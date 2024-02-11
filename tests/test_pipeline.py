@@ -5,6 +5,7 @@ import torch
 from torch.utils.data import DataLoader
 from torchvision.transforms import Compose, ToTensor, Normalize
 from torchvision.datasets import CIFAR10
+from torchvision.utils import save_image
 
 from modeling.diffusion import DiffusionModel
 from modeling.training import train_step, train_epoch, generate_samples
@@ -47,9 +48,8 @@ def test_training(device, train_dataset):
     # fix нагло копируем с test_train_on_one_batch
     # note: implement and test a complete training procedure (including sampling)
     
-    path = 'test_dir'
-    if not os.path.exists(path):
-        os.mkdir(path)
+    path = os.path.join(os.getcwd(), 'test_dir')
+    os.makedirs(path)
     
     ddpm = DiffusionModel(
         eps_model=UnetModel(3, 3, hidden_size=32),
@@ -59,9 +59,13 @@ def test_training(device, train_dataset):
     ddpm = ddpm.to(device)
 
     optim = torch.optim.Adam(ddpm.parameters(), lr=5e-4)
-    dataloader = DataLoader(torch.utils.data.Subset(train_dataset, list(range(3))), batch_size=4, shuffle=True)
+    dataloader = DataLoader(torch.utils.data.Subset(train_dataset, list(range(1))), batch_size=4, shuffle=True)
 
     
-    for i in range(5000): # Смотрим на последние картинки
-        train_epoch(ddpm, dataloader, optim, device)
-    generate_samples(ddpm, device, f"{path}/{device}_{i}.png")
+    generate_samples(ddpm, device, f"{path}/{device}_{0}.png")
+    for i in range(1501 if device is "cpu" else 15001): # Смотрим на последние картинки
+        orig = train_epoch(ddpm, dataloader, optim, device)
+        if i == 0:
+            save_image(orig, f"{path}/orig.png")
+        if not i % 1500:
+            generate_samples(ddpm, device, f"{path}/{device}_{i}.png")

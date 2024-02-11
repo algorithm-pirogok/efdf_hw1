@@ -29,7 +29,6 @@ def train_epoch(model: DiffusionModel, dataloader: DataLoader, optimizer: Optimi
             wandb.log({"loss": loss_ema, "learning_rate": optimizer.param_groups[0]['lr']}, step=step + epoch * len(dataloader))
     return x
 
-
 def generate_samples(model: DiffusionModel, device: str, path: str, noise: torch.Tensor = None):
     model.eval()
     with torch.no_grad():

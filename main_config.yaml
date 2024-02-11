@@ -29,7 +29,7 @@ DiffusionModel:
     out_channels: 3
     hidden_size: 128 # с 256 слишком долго выходило
   betas:
-    [0.0001, 0.02]
+    [1e-4, 0.02]
   num_timesteps: 1000
 
 

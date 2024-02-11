@@ -38,7 +38,8 @@ class DiffusionModel(nn.Module):
         for i in range(self.num_timesteps, 0, -1): 
             z = (torch.randn(num_samples, *size, device=device) if i > 1 else 0) if noise is None else noise # fix не было привязки к девайсу
             eps = self.eps_model(x_i, torch.tensor(i / self.num_timesteps).repeat(num_samples, 1).to(device))
-            x_i = self.inv_sqrt_alphas[i].to(device) * (x_i - eps * self.one_minus_alpha_over_prod[i]) + self.sqrt_betas[i].to(device) * z
+            x_i = self.inv_sqrt_alphas[i] * (x_i - eps * self.one_minus_alpha_over_prod[i]) + self.sqrt_betas[i] * z
+        return x_i
         return  Normalize((-1, -1, -1), (2, 2, 2))(x_i) # Нормализация от исходника
 
 def get_schedules(beta1: float, beta2: float, num_timesteps: int) -> Dict[str, torch.Tensor]:
