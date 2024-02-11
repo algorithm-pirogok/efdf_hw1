@@ -63,9 +63,10 @@ def test_training(device, train_dataset):
 
     
     generate_samples(ddpm, device, f"{path}/{device}_{0}.png")
-    for i in range(1501 if device is "cpu" else 15001): # Смотрим на последние картинки
+    step = 150 if device == "cpu" else 1500
+    for i in range(151 if device == "cpu" else 15001): # Смотрим на последние картинки
         orig = train_epoch(ddpm, dataloader, optim, device)
         if i == 0:
             save_image(orig, f"{path}/{device}_orig.png")
-        if not i % 1500:
+        if not i % step:
             generate_samples(ddpm, device, f"{path}/{device}_{i}.png")
