@@ -20,6 +20,7 @@ Augmentations:
     - _target_: torchvision.transforms.Normalize
       mean: [0.5, 0.5, 0.5]
       std: [0.5, 0.5, 0.5]
+    - _target_: torchvision.transforms.RandomHorizontalFlip
 
 DiffusionModel:
   _target_: modeling.diffusion.DiffusionModel
@@ -30,7 +31,7 @@ DiffusionModel:
     hidden_size: 128
   betas:
     [1e-4, 0.02]
-  num_timesteps: 1000
+  num_timesteps: 100
 
 
 name: main_config
