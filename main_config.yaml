@@ -1,5 +1,5 @@
 defaults:
-  - optimizer: Adam
+  - optimizer: SGD
 
 CIFAR10:
   _target_: torchvision.datasets.CIFAR10

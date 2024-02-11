@@ -15,8 +15,9 @@ from modeling.unet import UnetModel
 @pytest.fixture
 def train_dataset():
     transforms = Compose([ToTensor(), Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+    path = os.path.join(os.getcwd(), '../../data')
     dataset = CIFAR10(
-        "./data",
+        path,
         train=True,
         download=True,
         transform=transforms,
